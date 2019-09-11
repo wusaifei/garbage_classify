@@ -245,6 +245,10 @@
 
 * [垃圾分类数据集下载地址](https://modelarts-competitions.obs.cn-north-1.myhuaweicloud.com/garbage_classify/dataset/garbage_classify.zip)
 
+* 扩充数据集：链接：https://pan.baidu.com/s/1SulD2MqZx_U891JXeI2-2g 
+提取码：epgs
+
+
 ### 运行
 * 运行`Save_path.py`得到图像的位置信息
 * 运行`mean_std.py`得到图像的均值和方差
