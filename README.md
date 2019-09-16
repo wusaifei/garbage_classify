@@ -1,3 +1,18 @@
+已修改成本地可以运行。 
+
+修改方法：
+
+1.`save_model.py|train.py|eval.py|run.py|`中`moxing.framework.file`函数全部换成`os.path`和`shutil.copy`函数。因为python里面暂时没有moxing框架。
+
+2.注释掉`run.py`文件里面的下面几行代码：
+        
+    # FLAGS.tmp = os.path.join(FLAGS.local_data_root, 'tmp/')
+    # print(FLAGS.tmp)
+    # if not os.path.exists(FLAGS.tmp):
+    #     os.mkdir(FLAGS.tmp)
+        
+3.修改`eval.py`——具体请参考代码的`History`
+
 # garbage_classify
 ## 赛题背景
 比赛链接：[华为云人工智能大赛·垃圾分类挑战杯](https://developer.huaweicloud.com/competition/competitions/1000007620/introduction)
