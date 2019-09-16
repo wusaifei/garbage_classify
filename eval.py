@@ -8,8 +8,8 @@ from glob import glob
 from PIL import Image
 import tensorflow as tf
 from keras import backend
-from keras.optimizers import adam, Nadam
-from moxing.framework import file
+from keras.optimizers import adam
+
 from tensorflow.python.saved_model import tag_constants
 
 from train import model_fn
@@ -71,8 +71,7 @@ def test_single_h5(FLAGS, h5_weights_path):
     if not os.path.isfile(h5_weights_path):
         print('%s is not a h5 weights file path' % h5_weights_path)
         return
-    # optimizer = adam(lr=FLAGS.learning_rate, clipnorm=0.001)
-    optimizer = Nadam(lr=FLAGS.learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
+    optimizer = adam(lr=FLAGS.learning_rate, clipnorm=0.001)
     objective = 'categorical_crossentropy'
     metrics = ['accuracy']
     model = model_fn(FLAGS, objective, optimizer, metrics)
@@ -94,7 +93,7 @@ def test_single_h5(FLAGS, h5_weights_path):
     print('accuracy: %s' % accuracy)
     result_file_name = os.path.join(os.path.dirname(h5_weights_path),
                                     '%s_accuracy.txt' % os.path.basename(h5_weights_path))
-    with file.File(result_file_name, 'w') as f:
+    with open(result_file_name, 'w') as f:
         f.write('# predict error files\n')
         f.write('####################################\n')
         f.write('file_name, true_label, pred_label\n')
@@ -108,7 +107,7 @@ def test_batch_h5(FLAGS):
     """
     test all the h5 weights files in the model_dir
     """
-    file_paths = file.glob(os.path.join(FLAGS.eval_weights_path, '*.h5'))
+    file_paths = glob.glob(os.path.join(FLAGS.eval_weights_path, '*.h5'))
     for file_path in file_paths:
         test_single_h5(FLAGS, file_path)
 
@@ -118,30 +117,46 @@ def test_single_model(FLAGS):
         pb_model_dir = '/cache/tmp/model'
         if os.path.exists(pb_model_dir):
             shutil.rmtree(pb_model_dir)
-        file.copy_parallel(FLAGS.eval_pb_path, pb_model_dir)
+        shutil.copytree(FLAGS.eval_pb_path, pb_model_dir)
     else:
         pb_model_dir = FLAGS.eval_pb_path
     signature_key = 'predict_images'
     input_key_1 = 'input_img'
     output_key_1 = 'output_score'
     config = tf.ConfigProto(allow_soft_placement=True)
+
     with tf.get_default_graph().as_default():
-        sess = tf.Session(graph=tf.Graph(), config=config)
-        meta_graph_def = tf.saved_model.loader.load(sess, [tag_constants.SERVING], pb_model_dir)
+        sess1 = tf.Session(graph=tf.Graph(), config=config)
+        pb_model_dir1 = pb_model_dir + '/model1'
+        meta_graph_def = tf.saved_model.loader.load(sess1, [tag_constants.SERVING], pb_model_dir)
         if FLAGS.eval_pb_path.startswith('s3//'):
             shutil.rmtree(pb_model_dir)
         signature = meta_graph_def.signature_def
         input_images_tensor_name = signature[signature_key].inputs[input_key_1].name
         output_score_tensor_name = signature[signature_key].outputs[output_key_1].name
 
-        input_images = sess.graph.get_tensor_by_name(input_images_tensor_name)
-        output_score = sess.graph.get_tensor_by_name(output_score_tensor_name)
+        input_images = sess1.graph.get_tensor_by_name(input_images_tensor_name)
+        output_score = sess1.graph.get_tensor_by_name(output_score_tensor_name)
+
+    with tf.get_default_graph().as_default():
+        sess2 = tf.Session(graph=tf.Graph(), config=config)
+        pb_model_dir1 = pb_model_dir + '/model2'
+        meta_graph_def = tf.saved_model.loader.load(sess2, [tag_constants.SERVING], pb_model_dir)
+        if FLAGS.eval_pb_path.startswith('s3//'):
+            shutil.rmtree(pb_model_dir)
+        signature = meta_graph_def.signature_def
+        input_images_tensor_name = signature[signature_key].inputs[input_key_1].name
+        output_score_tensor_name = signature[signature_key].outputs[output_key_1].name
+
+        input_images = sess2.graph.get_tensor_by_name(input_images_tensor_name)
+        output_score = sess2.graph.get_tensor_by_name(output_score_tensor_name)
+
     img_names, test_data, test_labels = load_test_data(FLAGS)
     right_count = 0
     error_infos = []
     for index, img in enumerate(test_data):
         img = img[np.newaxis, :, :, :]
-        pred_score = sess.run([output_score], feed_dict={input_images: img})
+        pred_score = sess1.run([output_score], feed_dict={input_images: img})
         if pred_score is not None:
             pred_label = np.argmax(pred_score[0], axis=1)[0]
             test_label = test_labels[index]
@@ -153,8 +168,34 @@ def test_single_model(FLAGS):
             print('pred_score is None')
     accuracy = right_count / len(img_names)
     print('accuracy: %s' % accuracy)
-    result_file_name = os.path.join(FLAGS.eval_pb_path, 'accuracy.txt')
-    with file.File(result_file_name, 'w') as f:
+    result_file_name = os.path.join(FLAGS.eval_pb_path, 'accuracy1.txt')
+    with open(result_file_name, 'w') as f:
+        f.write('# predict error files\n')
+        f.write('####################################\n')
+        f.write('file_name, true_label, pred_label\n')
+        f.writelines(error_infos)
+        f.write('####################################\n')
+        f.write('accuracy: %s\n' % accuracy)
+
+    img_names, test_data, test_labels = load_test_data(FLAGS)
+    right_count = 0
+    error_infos = []
+    for index, img in enumerate(test_data):
+        img = img[np.newaxis, :, :, :]
+        pred_score = sess2.run([output_score], feed_dict={input_images: img})
+        if pred_score is not None:
+            pred_label = np.argmax(pred_score[0], axis=1)[0]
+            test_label = test_labels[index]
+            if pred_label == test_label:
+                right_count += 1
+            else:
+                error_infos.append('%s, %s, %s\n' % (img_names[index], test_label, pred_label))
+        else:
+            print('pred_score is None')
+    accuracy = right_count / len(img_names)
+    print('accuracy: %s' % accuracy)
+    result_file_name = os.path.join(FLAGS.eval_pb_path, 'accuracy2.txt')
+    with open(result_file_name, 'w') as f:
         f.write('# predict error files\n')
         f.write('####################################\n')
         f.write('file_name, true_label, pred_label\n')
@@ -166,11 +207,9 @@ def test_single_model(FLAGS):
 
 def eval_model(FLAGS):
     if FLAGS.eval_weights_path != '':
-        if file.is_directory(FLAGS.eval_weights_path):
+        if os.path.isdir(FLAGS.eval_weights_path):
             test_batch_h5(FLAGS)
         else:
             test_single_h5(FLAGS, FLAGS.eval_weights_path)
     elif FLAGS.eval_pb_path != '':
         test_single_model(FLAGS)
-
-
