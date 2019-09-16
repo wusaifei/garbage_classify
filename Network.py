@@ -6,7 +6,6 @@ from keras import backend
 from keras.models import Model
 from keras.optimizers import adam, Nadam, SGD
 from keras.callbacks import TensorBoard, Callback
-from moxing.framework import file
 from data_gen import data_flow
 from keras.layers import Dense, Input, Dropout, Activation,GlobalAveragePooling2D,LeakyReLU,BatchNormalization
 from keras.layers import concatenate,Concatenate,multiply, LocallyConnected2D, Lambda,Conv2D,GlobalMaxPooling2D,Flatten
