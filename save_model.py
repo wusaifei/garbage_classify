@@ -40,7 +40,7 @@ def save_pb_model(FLAGS, model):
             pb_save_dir_obs = pb_save_dir_local
 
     signature = tf.saved_model.signature_def_utils.predict_signature_def(
-        inputs={'input_img': model.input}, outputs={'output_score': model.layers.output})
+        inputs={'input_img': model.input}, outputs={'output_score': model.output})
     builder = tf.saved_model.builder.SavedModelBuilder(os.path.join(pb_save_dir_local, 'model'))
     legacy_init_op = tf.group(tf.tables_initializer(), name='legacy_init_op')
     builder.add_meta_graph_and_variables(
