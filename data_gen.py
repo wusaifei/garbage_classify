@@ -161,8 +161,7 @@ def data_flow(train_data_dir, batch_size, num_classes, input_size):  # need modi
     train_img_paths, train_labels = train[:, 0], train[:, -1]
     validation_img_paths, validation_labels = validation[:, 0], validation[:, -1]
 
-    train_labels = np_utils.to_categorical(train_labels.astype(int), num_classes)
-    validation_labels = np_utils.to_categorical(validation_labels.astype(int), num_classes)
+
     print('total samples: %d, training samples: %d, validation samples: %d' % (len(img_paths), len(train_img_paths), len(validation_img_paths)))
 
     train_sequence = BaseSequence(train_img_paths, train_labels, batch_size, [input_size, input_size], True)
