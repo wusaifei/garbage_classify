@@ -71,7 +71,7 @@ def test_single_h5(FLAGS, h5_weights_path):
     if not os.path.isfile(h5_weights_path):
         print('%s is not a h5 weights file path' % h5_weights_path)
         return
-    optimizer = adam(lr=FLAGS.learning_rate, clipnorm=0.001)
+    optimizer = Nadam(lr=FLAGS.learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
     objective = 'categorical_crossentropy'
     metrics = ['accuracy']
     model = model_fn(FLAGS, objective, optimizer, metrics)
