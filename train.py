@@ -45,7 +45,7 @@ def model_fn(FLAGS, objective, optimizer, metrics):
     x = Dropout(0.4)(x)
     predictions = Dense(FLAGS.num_classes, activation='softmax')(x)  # activation="linear",activation='softmax'
     model = Model(input=model.input, output=predictions)
-    model = multi_gpu_model(model, 4)
+    model = multi_gpu_model(model, 4)  # 修改成自身需要的GPU数量，4代表用4个GPU同时加载程序
     # model.load_weights('/home/work/user-job-dir/src/weights_004_0.9223.h5')
     model.compile(loss=objective, optimizer=optimizer, metrics=metrics)
     return model
