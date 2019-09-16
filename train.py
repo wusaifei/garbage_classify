@@ -6,7 +6,7 @@ from keras import backend
 from keras.models import Model
 from keras.optimizers import adam, Nadam, SGD
 from keras.callbacks import TensorBoard, Callback
-from moxing.framework import file
+import shutil
 from data_gen import data_flow
 from keras.layers import Dense, Input, Dropout, Activation,GlobalAveragePooling2D,LeakyReLU,BatchNormalization
 from keras.layers import concatenate,Concatenate,multiply, LocallyConnected2D, Lambda,Conv2D,GlobalMaxPooling2D,Flatten
@@ -52,7 +52,7 @@ def model_fn(FLAGS, objective, optimizer, metrics):
 
 class LossHistory(Callback):
     def __init__(self, FLAGS):
-        super(LossHistory, self).__init__()
+        super(LossHistory, self).__init__( )
         self.FLAGS = FLAGS
 
     def on_train_begin(self, logs={}):
@@ -67,15 +67,13 @@ class LossHistory(Callback):
         self.model.save_weights(save_path)
         if self.FLAGS.train_url.startswith('s3://'):
             save_url = os.path.join(self.FLAGS.train_url, 'weights_%03d_%.4f.h5' % (epoch, logs.get('val_acc')))
-            file.copy(save_path, save_url)
+            shutil.copyfile(save_path, save_url)
         print('save weights file', save_path)
 
         if self.FLAGS.keep_weights_file_num > -1:
             weights_files = glob(os.path.join(self.FLAGS.train_local, '*.h5'))
             if len(weights_files) >= self.FLAGS.keep_weights_file_num:
                 weights_files.sort(key=lambda file_name: os.stat(file_name).st_ctime, reverse=True)
-                for file_path in weights_files[self.FLAGS.keep_weights_file_num:]:
-                    os.remove(file_path)  # only remove weights files on local path
 
 
 def train_model(FLAGS):
@@ -89,17 +87,21 @@ def train_model(FLAGS):
     objective = 'categorical_crossentropy'
     metrics = ['accuracy']
     model = model_fn(FLAGS, objective, optimizer, metrics)
-    if FLAGS.restore_model_path != '' and file.exists(FLAGS.restore_model_path):
+    if FLAGS.restore_model_path != '' and os.path.exists(FLAGS.restore_model_path):
         if FLAGS.restore_model_path.startswith('s3://'):
             restore_model_name = FLAGS.restore_model_path.rsplit('/', 1)[1]
-            file.copy(FLAGS.restore_model_path, '/cache/tmp/' + restore_model_name)
+            shutil.copyfile(FLAGS.restore_model_path, '/cache/tmp/' + restore_model_name)
             model.load_weights('/cache/tmp/' + restore_model_name)
             os.remove('/cache/tmp/' + restore_model_name)
         else:
             model.load_weights(FLAGS.restore_model_path)
+        print("LOAD OK!!!")
     if not os.path.exists(FLAGS.train_local):
         os.makedirs(FLAGS.train_local)
-    tensorBoard = TensorBoard(log_dir=FLAGS.train_local)
+    
+    
+    log_local = '../log_file/'
+    tensorBoard = TensorBoard(log_dir=log_local)
     # reduce_lr = ks.callbacks.ReduceLROnPlateau(monitor='val_acc', factor=0.5, verbose=1, patience=1,
     #                                            min_lr=1e-7)
     # 余弦退火学习率
@@ -141,6 +143,7 @@ def train_model(FLAGS):
         print('test dataset predicting...')
         from eval import load_test_data
         img_names, test_data, test_labels = load_test_data(FLAGS)
+        test_data = preprocess_input(test_data)
         predictions = model.predict(test_data, verbose=0)
 
         right_count = 0
