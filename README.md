@@ -10,8 +10,6 @@
     # print(FLAGS.tmp)
     # if not os.path.exists(FLAGS.tmp):
     #     os.mkdir(FLAGS.tmp)
-        
-3.修改`eval.py`——具体请参考代码的`History`
 
 # garbage_classify
 ## 赛题背景
