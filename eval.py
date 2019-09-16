@@ -8,7 +8,7 @@ from glob import glob
 from PIL import Image
 import tensorflow as tf
 from keras import backend
-from keras.optimizers import adam， 
+from keras.optimizers import adam, Nadam
 
 from tensorflow.python.saved_model import tag_constants
 
