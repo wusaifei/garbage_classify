@@ -3,7 +3,7 @@ import os
 
 import tensorflow as tf
 from keras import backend
-from keras.optimizers import adam
+from keras.optimizers import adam, Nadam
 import shutil
 
 
