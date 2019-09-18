@@ -93,7 +93,7 @@
 
 ## 代码解析
 ### BaseLine改进
-1.使用多种模型进行对比实验，ResNet50, SE-ResNet50, Xeception, SE-Xeception, efficientNetB5。
+1.使用多种模型进行对比实验，ResNet50, SE-ResNet50, Xeception, SE-Xeception, [efficientNetB5](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet)。
 
 2.使用组归一化（GroupNormalization）代替批量归一化（batch_normalization）-解决当Batch_size过小导致的准确率下降。当batch_size小于16时，BN的error率
 逐渐上升，`train.py`。
