@@ -11,6 +11,15 @@
     # if not os.path.exists(FLAGS.tmp):
     #     os.mkdir(FLAGS.tmp)
 
+# 运行环境
+
+>python3.6
+
+>tensorflow 1.13.1
+
+>keras 2.24
+
+
 # garbage_classify
 ## 赛题背景
 比赛链接：[华为云人工智能大赛·垃圾分类挑战杯](https://developer.huaweicloud.com/competition/competitions/1000007620/introduction)
