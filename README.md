@@ -1,3 +1,9 @@
+> 图像分类的更多tricks（注意力机制 keras，TensorFlow和pytorch 版本等）：[图像分类比赛tricks：“华为云杯”2019人工智能创新应用大赛](https://zhuanlan.zhihu.com/p/98740628)
+
+> 大家如果对目标检测比赛比较感兴趣的话，可以看一下我这篇对目标检测比赛tricks的详细介绍：[目标检测比赛中的tricks（已更新更多代码解析)](https://zhuanlan.zhihu.com/p/102817180)
+
+> 目标检测比赛笔记：[目标检测比赛笔记](https://zhuanlan.zhihu.com/p/137567177)
+
 已修改成本地可以运行。 
 
 修改方法：
