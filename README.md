@@ -294,7 +294,49 @@
     
       python run.py --mode=eval --eval_pb_path='./model_snapshots/model' --test_data_url='./garbage_classify/train_data'
     
-    
+## 增添SVM分类器
+
+
+> 当模型训练完之后，用训练好的模型预测训练数据，并将它们保存在数组中。然后放到SVC中进行训练，最后将训练好的分类器对抽取的测试数据特征进行分类。
+
+
+代码如下：
+
+    target_pre_con = []
+    target_con = []
+    for i, data in tqdm(enumerate(trian_dataloaders_dict['all_data'])):
+
+        input, target = data
+        input, target = input.to(device), target.to(device)
+        target_pre = model(input)
+
+        target_pre = target_pre.cpu()
+        target = target.cpu()
+
+        target_pre = target_pre.detach().numpy()
+        target = target.detach().numpy()
+
+        target_pre_con.extend(target_pre)
+        target_con.extend(target)
+
+    target_pre_con = np.asarray(target_pre_con)
+    target_con = np.asarray(target_con)
+
+    print(target_pre_con.shape)
+    print(target_con.shape)
+    # 提取特征用clf：svm
+    clf = SVC(kernel='rbf', gamma='auto')
+    clf.fit(target_pre_con, target_con)
+
+    for i, (input, filepath) in tqdm(enumerate(test_loader)):
+        # print(input.shape[1])
+        with torch.no_grad():
+            image_var = input.to(device)
+            y_pred = model(image_var)
+            label = y_pred.cpu().data.numpy()
+            # 提取特征用clf分类
+            label = clf.predict(label)
+            labels.append(label)
 
 ## 实验结果
 
