@@ -34,6 +34,7 @@
 
 >keras 2.24
 
+新版本运行的话可能会运行不成功。
 
 # garbage_classify
 ## 赛题背景
