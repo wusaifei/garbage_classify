@@ -1,10 +1,13 @@
 # 前言
 
+本文介绍的分类方式可能比较繁琐，因为它是采用华为云比赛的提交模式进行的。简洁的版本点击这里：https://github.com/wusaifei/HWCC_image_classification
+
 1.图像分类的更多tricks（注意力机制 keras，TensorFlow和pytorch 版本等）：[图像分类比赛tricks：“华为云杯”2019人工智能创新应用大赛](https://zhuanlan.zhihu.com/p/98740628)
 
 2.大家如果对目标检测比赛比较感兴趣的话，可以看一下我这篇对目标检测比赛tricks的详细介绍：[目标检测比赛中的tricks（已更新更多代码解析)](https://zhuanlan.zhihu.com/p/102817180)
 
 3.目标检测比赛笔记：[目标检测比赛笔记](https://zhuanlan.zhihu.com/p/137567177)
+
 
 # 增添内容
 
@@ -352,7 +355,7 @@
 
 ## 实验结果
 
-* 网络的改进：ResNet50-0.689704，SE-ResNet50-0.0.83259，Xception-0.879003，EfficientNetB5-0.924113（无数据增强）
+* 网络的改进：`ResNet50-0.689704`，`SE-ResNet50-0.83259`，`Xception-0.879003`，`EfficientNetB5-0.924113`（无数据增强）
 
 * 数据增强：由0.924113提升到0.934721
 
@@ -360,6 +363,16 @@
 
 
 大家也可以在分类代码中增加测试时增强，详细代码在`tta_wrapper`文件夹里面，里面有详细的介绍和测试用例。
+
+# 后续
+
+1. 增添模型融合（投票）。
+
+2. 测试时增强。
+
+3. `Cutout`, `Mixup`, `CutMix`等数据增强策略。
+
+4. 标签平滑。
 
 
 
