@@ -113,6 +113,7 @@
         'efficientnet-b6': (1.8, 2.6, 528, 0.5),
         'efficientnet-b7': (2.0, 3.1, 600, 0.5),
 
+efficientNet的论文地址：https://arxiv.org/pdf/1905.11946.pdf
 
 
 ## 代码解析
@@ -269,6 +270,8 @@
 * `train.py`——训练网络部分，包括网络，loss, optimizer等
 
 * `warmup_cosine_decay_scheduler.py`——余弦退火学习率
+
+* `pip-requirements.txt`——安装其他所需的库, 安装命令为：`pip install -r requirements.txt`
 
 ## 使用
 ### 前期准备
