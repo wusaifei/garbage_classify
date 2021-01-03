@@ -1,6 +1,6 @@
 # 前言
 
-##### 本文介绍的分类方式可能比较繁琐，因为它是采用华为云比赛的提交模式进行的。简洁的分类版本点击这里：https://github.com/wusaifei/HWCC_image_classification
+#### 本文介绍的分类方式可能比较繁琐，因为它是采用华为云比赛的提交模式进行的。简洁的分类版本点击这里：https://github.com/wusaifei/HWCC_image_classification
 
 1.图像分类的更多tricks（注意力机制 keras，TensorFlow和pytorch 版本等）：[图像分类比赛tricks：“华为云杯”2019人工智能创新应用大赛](https://zhuanlan.zhihu.com/p/98740628)
 
