@@ -28,8 +28,12 @@ with open(path, 'r') as f:
         print(img)
         img = img.astype(np.float32) / 255.
         for i in range(3):
-            means[i] += img[:, :, i].mean()
-            stdevs[i] += img[:, :, i].std()
+            try:
+                means[i] += img[:, :, i].mean()
+                stdevs[i] += img[:, :, i].std()
+            except:
+                print('IndexError：此处图像出现错误, 但是不影响均值和方差的计算。')
+                break
 print(num_imgs)
 means.reverse()
 stdevs.reverse()
@@ -40,23 +44,3 @@ stdevs = np.asarray(stdevs) / num_imgs
 print("normMean = {}".format(means))
 print("normStd = {}".format(stdevs))
 print('transforms.Normalize(normMean = {}, normStd = {})'.format(means, stdevs))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
