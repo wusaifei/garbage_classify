@@ -24,7 +24,7 @@
     # if not os.path.exists(FLAGS.tmp):
     #     os.mkdir(FLAGS.tmp)
  
-#### .md后面增添SVM分类器
+#### .md后面增添SVM分类器、决策树分类器、随机森林分类器。
 
 # 运行环境
 
@@ -356,6 +356,19 @@ efficientNet的论文地址：https://arxiv.org/pdf/1905.11946.pdf
             # 提取特征用clf分类
             label = clf.predict(label)
             labels.append(label)
+            
+ 
+## 决策树分类器和随机森林分类器
+
+只需要将clf换成`DecisionTreeClassifier()`或`RandomForestClassifier()`即可。
+
+   `from sklearn.tree import DecisionTreeClassifier`
+   
+   `from sklearn.ensemble import RandomForestClassifier`
+   
+   `clf = DecisionTreeClassifier()`
+   
+   `clf = RandomForestClassifier()`
 
 ## 实验结果
 
