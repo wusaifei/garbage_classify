@@ -8,6 +8,20 @@
 
 3.目标检测比赛笔记：[目标检测比赛笔记](https://zhuanlan.zhihu.com/p/137567177)
 
+4.如果对换脸技术比较感兴趣的同学可以点击这里：[deepfakes/faceswap：换脸技术详细教程，手把手教学，简单快速上手！！](https://zhuanlan.zhihu.com/p/376853800)
+
+5.在日常调参的摸爬滚打中，参考了不少他人的调参经验，也积累了自己的一些有效调参方法，慢慢总结整理如下。希望对新晋算法工程师有所助力呀～：[写给新手炼丹师：2021版调参上分手册](https://zhuanlan.zhihu.com/p/376068083)
+
+6.[深度学习中不同类型卷积的综合介绍：2D卷积、3D卷积、转置卷积、扩张卷积、可分离卷积、扁平卷积、分组卷积、随机分组卷积、逐点分组卷积等](https://zhuanlan.zhihu.com/p/366744794)
+
+7.分类必备知识:[Softmax函数和Sigmoid函数的区别与联系](https://zhuanlan.zhihu.com/p/356976844)、[深度学习中学习率和batchsize对模型准确率的影响](https://zhuanlan.zhihu.com/p/277487038)、[准确率(Precision)、召回率(Recall)、F值(F-Measure)、平均正确率，IoU](https://zhuanlan.zhihu.com/p/101101207)、[利用python一层一层可视化卷积神经网络，以ResNet50为例](https://zhuanlan.zhihu.com/p/101038013)
+
+8.[pytorch笔记：Efficientnet微调](https://zhuanlan.zhihu.com/p/102467338)
+
+9.[keras, TensorFlow中加入注意力机制](https://zhuanlan.zhihu.com/p/99260231)、[pytorch中加入注意力机制（CBAM），以ResNet为例。解析到底要不要用ImageNet预训练？如何加预训练参数？](https://zhuanlan.zhihu.com/p/99261200)
+
+
+
 
 # 增添内容
 
@@ -119,9 +133,9 @@ efficientNet的论文地址：https://arxiv.org/pdf/1905.11946.pdf
 
 ## 代码解析
 ### BaseLine改进
-1.使用多种模型进行对比实验，ResNet50, SE-ResNet50, Xeception, SE-Xeception, [efficientNetB5](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet)。
+1.使用多种模型进行对比实验，[ResNet50](https://arxiv.org/pdf/1512.03385.pdf), [SE-ResNet50](https://arxiv.org/abs/1709.01507), [Xception](https://arxiv.org/abs/1610.02357), SE-Xception, [efficientNetB5](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet)。
 
-2.使用组归一化（GroupNormalization）代替批量归一化（batch_normalization）-解决当Batch_size过小导致的准确率下降。当batch_size小于16时，BN的error率
+2.使用[组归一化（GroupNormalization）](https://arxiv.org/abs/1803.08494)代替[批量归一化（batch_normalization）](https://arxiv.org/abs/1502.03167)-解决当Batch_size过小导致的准确率下降。当batch_size小于16时，BN的error率
 逐渐上升，`train.py`。
     
     
@@ -129,12 +143,12 @@ efficientNet的论文地址：https://arxiv.org/pdf/1905.11946.pdf
         if "batch_normalization" in layer.name:
             model.layers[i] = GroupNormalization(groups=32, axis=-1, epsilon=0.00001)
 
-3.NAdam优化器
+3.[NAdam优化器](http://cs229.stanford.edu/proj2015/054_report.pdf)
     
     
     optimizer = Nadam(lr=FLAGS.learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
 
-4.自定义学习率-SGDR余弦退火学习率
+4.自定义学习率-[SGDR余弦退火学习率](https://arxiv.org/abs/1608.03983)
     
     
     sample_count = len(train_sequence) * FLAGS.batch_size
