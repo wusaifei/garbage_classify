@@ -284,10 +284,11 @@ efficientNet的论文地址：https://arxiv.org/pdf/1905.11946.pdf
     
 
 
-* [垃圾分类数据集下载地址](https://modelarts-competitions.obs.cn-north-1.myhuaweicloud.com/garbage_classify/dataset/garbage_classify.zip)
+* [垃圾分类数据集下载地址，此链接已经不存在请用下面的百度云盘下载。](https://modelarts-competitions.obs.cn-north-1.myhuaweicloud.com/garbage_classify/dataset/garbage_classify.zip)
 
-* 扩充数据集：链接：https://pan.baidu.com/s/1SulD2MqZx_U891JXeI2-2g 
-提取码：epgs
+* 垃圾分类数据集下载地址链接：https://pan.baidu.com/s/11xp0jBKAitU8r0_RWVpX1Q ， 提取码：jqa1 
+
+* 扩充数据集：链接：https://pan.baidu.com/s/1SulD2MqZx_U891JXeI2-2g ，提取码：epgs
 
 
 ### 运行
