@@ -377,13 +377,17 @@ efficientNet的论文地址：https://arxiv.org/pdf/1905.11946.pdf
 
 只需要将clf换成`DecisionTreeClassifier()`或`RandomForestClassifier()`即可。
 
-   `from sklearn.tree import DecisionTreeClassifier`
+```
+from sklearn.tree import DecisionTreeClassifier
    
-   `from sklearn.ensemble import RandomForestClassifier`
+from sklearn.ensemble import RandomForestClassifier
    
-   `clf = DecisionTreeClassifier()`
+clf = DecisionTreeClassifier()
    
-   `clf = RandomForestClassifier()`
+clf = RandomForestClassifier()
+```
+
+
 
 ## 实验结果
 
@@ -402,7 +406,7 @@ efficientNet的论文地址：https://arxiv.org/pdf/1905.11946.pdf
 
 2. 测试时增强。
 
-3. `Cutout`, `Mixup`, `CutMix`等数据增强策略。
+3. [Cutout](https://github.com/uoguelph-mlrg/Cutout), [Mixup](https://github.com/facebookresearch/mixup-cifar10), [CutMix](https://github.com/clovaai/CutMix-PyTorch)等数据增强策略。
 
 4. 标签平滑。
 
